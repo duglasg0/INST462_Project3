@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Story Behind the Top Charting Songs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f7f6f2;
+      --white: #ffffff;
+      --border: rgba(0,0,0,0.08);
+      --text: #111;
+      --muted: #666;
+      --hint: #aaa;
+      --surface: #f5f4f0;
+      --radius: 16px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(247,246,242,0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: 0.01em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 12px;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    /* ── HERO ── */
+    .hero {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 5rem 2rem 3rem;
+    }
+
+    .hero-eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--hint);
+      margin-bottom: 12px;
+    }
+
+    .hero-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 42px;
+      font-weight: 800;
+      line-height: 1.1;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+
+    .hero-body {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.75;
+      max-width: 520px;
+    }
+
+    /* ── SECTIONS ── */
+    .section {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .section-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--hint);
+      margin-bottom: 8px;
+    }
+
+    .section-heading {
+      font-family: 'Syne', sans-serif;
+      font-size: 26px;
+      font-weight: 800;
+      line-height: 1.2;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+
+    .section-body {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.75;
+      margin-bottom: 2rem;
+      max-width: 540px;
+    }
+
+    /* ── CARDS ── */
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+    }
+
+    .card-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .card-sub {
+      font-size: 12px;
+      color: var(--hint);
+      font-style: italic;
+      margin-bottom: 1rem;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 1rem 0;
+    }
+
+    /* ── TOP 5 CAROUSEL ── */
+    .bg-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(70px);
+      opacity: 0.15;
+      pointer-events: none;
+      transition: background 0.8s ease;
+      z-index: 0;
+    }
+
+    .carousel-wrap { position: relative; }
+
+    .card-shell {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      position: relative;
+      z-index: 1;
+      height: 520px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .card-fade {
+      opacity: 0;
+      transform: translateY(10px);
+      animation: fadeUp 0.4s cubic-bezier(0.2,0.6,0.4,1) forwards;
+    }
+
+    @keyframes fadeUp { to { opacity:1; transform:translateY(0); } }
+
+    .rank-badge {
+      font-family: 'Syne', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 20px;
+      display: inline-block;
+      margin-bottom: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    .song-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      line-height: 1.15;
+      color: var(--text);
+      margin-bottom: 4px;
+      flex-shrink: 0;
+    }
+
+    .artist-name {
+      font-size: 15px;
+      color: var(--muted);
+      margin-bottom: 4px;
+      font-style: italic;
+      flex-shrink: 0;
+    }
+
+    .genre-tag {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 20px;
+      margin-left: 6px;
+      vertical-align: middle;
+      font-style: normal;
+    }
+
+    .streams-note { font-size: 12px; color: var(--hint); font-style: italic; flex-shrink: 0; }
+
+    .stats-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; flex-shrink: 0; }
+
+    .stat-box { background: var(--surface); border-radius: 10px; padding: 0.6rem 0.5rem; text-align: center; }
+    .stat-label { font-size: 9px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--hint); margin-bottom: 3px; }
+    .stat-val { font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 700; color: var(--text); line-height: 1; }
+    .stat-unit { font-size: 10px; font-weight: 400; color: var(--hint); }
+
+    .c-section-head { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--hint); margin-bottom: 8px; flex-shrink: 0; }
+    .also-section { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+    .artists-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1.25rem; flex: 1; min-height: 0; }
+    .artists-grid.single { grid-template-columns: 1fr; }
+    .artist-block { display: flex; flex-direction: column; }
+    .pill-list { display: flex; flex-direction: column; gap: 6px; margin-top: 5px; }
+    .pill { font-size: 12px; padding: 6px 12px; border-radius: 20px; border: 1px solid rgba(0,0,0,0.1); color: #555; background: var(--white); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .nav-row { display: flex; align-items: center; justify-content: space-between; margin-top: 0.9rem; flex-shrink: 0; }
+    .dots { display: flex; gap: 6px; align-items: center; }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: #ddd; cursor: pointer; border: none; padding: 0; transition: background 0.3s, transform 0.3s; }
+    .dot.active { transform: scale(1.35); }
+    .nav-btn { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: var(--muted); background: none; border: 1px solid rgba(0,0,0,0.12); border-radius: 8px; padding: 6px 14px; cursor: pointer; transition: background 0.2s, color 0.2s; }
+    .nav-btn:hover:not(:disabled) { background: var(--surface); color: var(--text); }
+    .nav-btn:disabled { opacity: 0.3; cursor: default; }
+
+    /* ── PIE ── */
+    /* ── BAR CHART ── */
+    .bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .bar-label { font-size: 12px; color: var(--text); width: 80px; flex-shrink: 0; text-align: right; }
+    .bar-track { flex: 1; height: 28px; background: var(--surface); border-radius: 4px; display: flex; align-items: center; }
+    .bar-fill { height: 100%; border-radius: 4px; flex-shrink: 0; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; }
+    .bar-val-inside { font-size: 11px; color: rgba(255,255,255,0.9); white-space: nowrap; }
+    .bar-val-outside { font-size: 11px; color: var(--hint); white-space: nowrap; padding-left: 8px; flex-shrink: 0; }
+
+    /* ── FINGERPRINT ── */
+    .top-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 1.25rem; }
+    .song-info { flex: 1; min-width: 0; }
+    .rank-pill { font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 3px 9px; border-radius: 20px; display: inline-block; margin-bottom: 8px; }
+    .song-name { font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 800; line-height: 1.15; color: var(--text); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .artist-line { font-size: 14px; color: var(--muted); font-style: italic; margin-bottom: 3px; }
+    .meta-line { font-size: 12px; color: var(--hint); }
+    .random-btn { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; padding: 8px 18px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.12); background: var(--white); color: #333; cursor: pointer; white-space: nowrap; flex-shrink: 0; transition: background 0.15s; }
+    .random-btn:hover { background: var(--surface); }
+    .chart-wrap { position: relative; width: 100%; height: 300px; }
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .stat-tile { background: var(--surface); border-radius: 10px; padding: 10px 12px; }
+    .stat-tile-label { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--hint); margin-bottom: 3px; }
+    .stat-tile-val { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 700; color: var(--text); line-height: 1; }
+    .stat-tile-unit { font-size: 11px; font-weight: 400; color: var(--hint); }
+
+    /* ── PROBABILITY BUILDER ── */
+    .section-head-sm { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #bbb; margin-bottom: 10px; }
+    .genre-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(108px,1fr)); gap: 6px; margin-bottom: 0.25rem; }
+    .genre-btn { font-family: 'DM Sans', sans-serif; font-size: 12px; padding: 7px 8px; border: 1px solid rgba(0,0,0,0.1); border-radius: 8px; background: var(--white); color: #555; cursor: pointer; transition: background 0.15s, color 0.15s, border-color 0.15s; text-align: center; }
+    .genre-btn:hover { background: var(--surface); }
+    .genre-btn.active { background: #534AB7; border-color: #534AB7; color: #fff; font-weight: 500; }
+    .slider-row { display: grid; grid-template-columns: 138px 1fr 48px; align-items: center; gap: 12px; margin-bottom: 13px; }
+    .slider-label { font-size: 13px; color: var(--muted); text-align: right; }
+    .slider-val { font-size: 13px; font-weight: 500; color: var(--text); }
+    input[type=range] { width: 100%; height: 4px; accent-color: #534AB7; cursor: pointer; }
+    .toggle-row { display: grid; grid-template-columns: 138px 1fr; align-items: center; gap: 12px; margin-bottom: 4px; }
+    .toggle { display: flex; border: 1px solid rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden; width: fit-content; }
+    .tog-btn { font-family: 'DM Sans', sans-serif; font-size: 12px; padding: 6px 20px; background: var(--white); color: #555; border: none; cursor: pointer; transition: background 0.15s, color 0.15s; }
+    .tog-btn.active { background: #534AB7; color: #fff; font-weight: 500; }
+    .prob-wrap { display: flex; flex-direction: column; align-items: center; margin: 0.5rem 0 1rem; }
+    .verdict { font-size: 13px; color: #777; text-align: center; margin-top: 8px; font-style: italic; min-height: 18px; }
+    .factor-row { display: flex; align-items: center; margin-bottom: 8px; }
+    .factor-name { font-size: 12px; color: var(--muted); width: 128px; flex-shrink: 0; }
+    .factor-bar-track { flex: 1; margin: 0 10px; height: 6px; background: #f0ede8; border-radius: 3px; overflow: hidden; }
+    .factor-bar-fill { height: 100%; border-radius: 3px; transition: width 0.35s ease; }
+    .factor-score { font-size: 12px; font-weight: 500; min-width: 40px; text-align: right; }
+    .tips-list { list-style: none; }
+    .tip-item { display: flex; gap: 9px; font-size: 12px; color: #555; margin-bottom: 8px; align-items: flex-start; line-height: 1.5; }
+    .tip-dot { width: 6px; height: 6px; border-radius: 50%; background: #534AB7; margin-top: 5px; flex-shrink: 0; }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      font-size: 12px;
+      color: var(--hint);
+      border-top: 1px solid var(--border);
+      max-width: 680px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-title">Spotify Wrapped 2025</span>
+  <ul class="nav-links">
+    <li><a href="#top5">Top 5</a></li>
+    <li><a href="#genres">Genres</a></li>
+    <li><a href="#fingerprint">Fingerprint</a></li>
+    <li><a href="#builder">Hit Builder</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <p class="hero-eyebrow">INST462 · Data-Driven Narrative</p>
+  <h1 class="hero-title">The Story Behind the Top Charting Songs</h1>
+  <p class="hero-body">What makes a song dominate Spotify Wrapped? This project explores the top 50 most-streamed songs of 2025 — who made them, what genres they belong to, and what audio features they share. Then it lets you build your own.</p>
+</div>
+
+<!-- SECTION 1: TOP 5 -->
+<div class="section" id="top5">
+  <p class="section-num">01</p>
+  <h2 class="section-heading">The artists of 2025</h2>
+  <p class="section-body">The top 5 songs of the year tell the story of a few breakout artists dominating the charts. Sabrina Carpenter alone claimed three of the five spots — a feat almost unheard of in a single Wrapped cycle.</p>
+
+  <div class="carousel-wrap">
+    <div class="bg-orb" id="orb1" style="width:340px;height:340px;top:-100px;right:-80px;"></div>
+    <div class="bg-orb" id="orb2" style="width:220px;height:220px;bottom:30px;left:-50px;"></div>
+    <div id="card-area"></div>
+  </div>
+</div>
+
+<!-- SECTION 2: PIE -->
+<div class="section" id="genres">
+  <p class="section-num">02</p>
+  <h2 class="section-heading">What genres ruled the charts?</h2>
+  <p class="section-body">Pop remains the undisputed king — nearly a third of all top 50 songs fall under the genre. But Indie Pop, Hip-Hop, and Country each carved out meaningful space, reflecting a more fragmented streaming landscape than ever before.</p>
+
+  <div class="card">
+    <div class="card-title">Genre breakdown</div>
+    <div class="card-sub">Spotify Wrapped 2025 — Top 50 songs</div>
+    <svg id="pie-svg" width="100%" viewBox="0 0 520 400" role="img" aria-label="Pie chart of genre distribution"></svg>
+  </div>
+</div>
+
+<!-- SECTION 3: BAR -->
+<div class="section">
+  <p class="section-num">03</p>
+  <h2 class="section-heading">The same story, measured in streams</h2>
+  <p class="section-body">Song count only tells part of the story. When you tally total streams, Pop's lead grows even larger — and the long tail of "Other" genres shows just how many niches contribute a surprisingly large combined audience.</p>
+
+  <div class="card">
+    <div class="card-title">Streams by genre</div>
+    <div class="card-sub">Spotify Wrapped 2025 — Top 50 songs, total billions streamed</div>
+    <div id="bars"></div>
+  </div>
+</div>
+
+<!-- SECTION 4: FINGERPRINT -->
+<div class="section" id="fingerprint">
+  <p class="section-num">04</p>
+  <h2 class="section-heading">How is each song built?</h2>
+  <p class="section-body">Behind every hit is a specific blend of energy, danceability, mood, and tempo. Hit shuffle to explore how any of the top 50 songs distributes its audio DNA — and see what patterns emerge across very different genres.</p>
+
+  <div class="card">
+    <div class="top-row">
+      <div class="song-info">
+        <span class="rank-pill" id="rank-pill">#1 Global</span>
+        <div class="song-name" id="song-name">Die With A Smile</div>
+        <div class="artist-line" id="artist-line">Lady Gaga & Bruno Mars</div>
+        <div class="meta-line" id="meta-line">Pop &middot; 2024 &middot; USA &middot; 1.7B streams</div>
+      </div>
+      <button class="random-btn" onclick="pickRandom()">Shuffle song</button>
+    </div>
+    <div class="chart-wrap">
+      <canvas id="radar" role="img" aria-label="Radar chart showing audio features"></canvas>
+    </div>
+    <div class="divider"></div>
+    <div class="stat-grid">
+      <div class="stat-tile"><div class="stat-tile-label">BPM</div><div class="stat-tile-val" id="stat-bpm">120</div></div>
+      <div class="stat-tile"><div class="stat-tile-label">Duration</div><div class="stat-tile-val" id="stat-dur">4:11</div></div>
+      <div class="stat-tile"><div class="stat-tile-label">Peak chart</div><div class="stat-tile-val" id="stat-peak">#1</div></div>
+      <div class="stat-tile"><div class="stat-tile-label">Streams</div><div class="stat-tile-val" id="stat-streams">1.7<span class="stat-tile-unit">B</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 5: HIT BUILDER -->
+<div class="section" id="builder">
+  <p class="section-num">05</p>
+  <h2 class="section-heading">Could your song chart?</h2>
+  <p class="section-body">Now it's your turn. Dial in a genre and audio features to see how your hypothetical song stacks up against the Spotify Wrapped top 50 profile — and get tips on what to change to push your score higher.</p>
+
+  <div class="card">
+    <div class="card-title">Hit song probability builder</div>
+    <div class="card-sub">Based on Spotify Wrapped 2025 Top 50 data</div>
+
+    <div class="section-head-sm">Genre</div>
+    <div class="genre-grid" id="genreGrid"></div>
+
+    <div class="divider"></div>
+    <div class="section-head-sm">Audio features</div>
+
+    <div class="slider-row">
+      <span class="slider-label">Danceability</span>
+      <input type="range" id="sl-dance" min="0" max="100" value="68" step="1" oninput="updateSlider('dance')">
+      <span class="slider-val" id="out-dance">0.68</span>
+    </div>
+    <div class="slider-row">
+      <span class="slider-label">Energy level</span>
+      <input type="range" id="sl-energy" min="0" max="100" value="65" step="1" oninput="updateSlider('energy')">
+      <span class="slider-val" id="out-energy">0.65</span>
+    </div>
+    <div class="slider-row">
+      <span class="slider-label">Mood (valence)</span>
+      <input type="range" id="sl-valence" min="0" max="100" value="67" step="1" oninput="updateSlider('valence')">
+      <span class="slider-val" id="out-valence">0.67</span>
+    </div>
+    <div class="slider-row">
+      <span class="slider-label">Acousticness</span>
+      <input type="range" id="sl-acoustic" min="0" max="100" value="15" step="1" oninput="updateSlider('acoustic')">
+      <span class="slider-val" id="out-acoustic">0.15</span>
+    </div>
+    <div class="slider-row">
+      <span class="slider-label">Tempo (BPM)</span>
+      <input type="range" id="sl-bpm" min="60" max="200" value="110" step="1" oninput="updateSlider('bpm')">
+      <span class="slider-val" id="out-bpm">110</span>
+    </div>
+    <div class="toggle-row">
+      <span class="slider-label">Explicit</span>
+      <div class="toggle">
+        <button class="tog-btn active" id="exp-no"  onclick="setExplicit(false)">Clean</button>
+        <button class="tog-btn"        id="exp-yes" onclick="setExplicit(true)">Explicit</button>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="section-head-sm">Hit probability</div>
+    <div class="prob-wrap">
+      <svg width="160" height="160" viewBox="0 0 160 160" role="img" aria-label="Hit probability ring">
+        <circle cx="80" cy="80" r="66" fill="none" stroke="#f0ede8" stroke-width="14"/>
+        <circle cx="80" cy="80" r="66" fill="none" stroke-width="14" stroke-linecap="round"
+          id="ringFill" stroke="#534AB7"
+          stroke-dasharray="414.7" stroke-dashoffset="414.7"
+          transform="rotate(-90 80 80)" style="transition:stroke-dashoffset 0.5s ease,stroke 0.5s ease;"/>
+        <text x="80" y="76" text-anchor="middle" font-size="30" font-weight="700"
+          font-family="'Syne', sans-serif" fill="#534AB7" id="ringPct">0%</text>
+        <text x="80" y="96" text-anchor="middle" font-size="12"
+          font-family="'DM Sans', sans-serif" fill="#aaa" id="ringLabel">calculating</text>
+      </svg>
+      <p class="verdict" id="verdict"></p>
+    </div>
+
+    <div class="divider"></div>
+    <div class="section-head-sm">Score breakdown</div>
+    <div id="factorBreakdown"></div>
+
+    <div class="divider"></div>
+    <div class="section-head-sm">Tips to improve your score</div>
+    <ul class="tips-list" id="tipsList"></ul>
+  </div>
+</div>
+
+<footer>
+  Designed for INST462 · Data: Spotify Wrapped 2025 Top 50
+</footer>
+
+<!-- Chart.js for radar -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+
+<script>
+/* ═══════════════════════════════════════════
+   TOP 5 CAROUSEL
+═══════════════════════════════════════════ */
+var top5Songs = [
+  { rank:1, title:"Die With A Smile", artist:"Lady Gaga & Bruno Mars", streams:1.7, genre:"Pop", bpm:120, duration:"4:11", year:2024, country:"USA", peak:1, energy:68, alsoBy:{"Lady Gaga":["Bad Romance","Shallow","Poker Face"],"Bruno Mars":["Uptown Funk","Just The Way You Are","Grenade"]} },
+  { rank:2, title:"APT.", artist:"ROSE & Bruno Mars", streams:1.62, genre:"K-Pop / Pop", bpm:145, duration:"2:53", year:2024, country:"South Korea", peak:1, energy:79, alsoBy:{"ROSE":["On The Ground","Boom Boom Boom Boom","Gone"],"Bruno Mars":["Uptown Funk","Leave The Door Open","Grenade"]} },
+  { rank:3, title:"Espresso", artist:"Sabrina Carpenter", streams:1.55, genre:"Pop", bpm:104, duration:"2:55", year:2024, country:"USA", peak:1, energy:73, alsoBy:{"Sabrina Carpenter":["Please Please Please","Taste","Bed Chem"]} },
+  { rank:4, title:"Please Please Please", artist:"Sabrina Carpenter", streams:1.48, genre:"Pop", bpm:107, duration:"3:06", year:2024, country:"USA", peak:1, energy:66, alsoBy:{"Sabrina Carpenter":["Espresso","Taste","Bed Chem"]} },
+  { rank:5, title:"Taste", artist:"Sabrina Carpenter", streams:1.41, genre:"Pop", bpm:117, duration:"2:57", year:2024, country:"USA", peak:1, energy:70, alsoBy:{"Sabrina Carpenter":["Espresso","Please Please Please","Bed Chem"]} }
+];
+
+var carouselPalettes = [
+  { badge:"#FAC775", badgeText:"#412402", orb1:"#EF9F27", orb2:"#FAC775" },
+  { badge:"#9FE1CB", badgeText:"#04342C", orb1:"#1D9E75", orb2:"#5DCAA5" },
+  { badge:"#B5D4F4", badgeText:"#042C53", orb1:"#378ADD", orb2:"#85B7EB" },
+  { badge:"#F4C0D1", badgeText:"#4B1528", orb1:"#D4537E", orb2:"#ED93B1" },
+  { badge:"#CECBF6", badgeText:"#26215C", orb1:"#7F77DD", orb2:"#AFA9EC" }
+];
+
+var accentColors = ["#BA7517","#0F6E56","#185FA5","#993556","#534AB7"];
+var currentCard = 0;
+
+function renderCard(idx) {
+  var s = top5Songs[idx];
+  var p = carouselPalettes[idx];
+  document.getElementById('orb1').style.background = p.orb1;
+  document.getElementById('orb2').style.background = p.orb2;
+  var alsoEntries = Object.entries(s.alsoBy).filter(function(e) { return e[0] && e[1].length > 0; });
+  var isSingle = alsoEntries.length === 1;
+  var pillsHtml = alsoEntries.map(function(e) {
+    return '<div class="artist-block"><div class="c-section-head">' + e[0] + '</div><div class="pill-list">' +
+      e[1].slice(0,3).map(function(t) { return '<span class="pill">' + t + '</span>'; }).join('') + '</div></div>';
+  }).join('');
+  var dotsHtml = top5Songs.map(function(_,i) {
+    var isActive = i === idx;
+    return '<button class="dot' + (isActive ? ' active' : '') + '"' +
+      (isActive ? ' style="background:' + accentColors[idx] + '"' : '') +
+      ' onclick="goTo(' + i + ')"></button>';
+  }).join('');
+  document.getElementById('card-area').innerHTML =
+    '<div class="card-shell card-fade">' +
+    '<div style="flex-shrink:0"><span class="rank-badge" style="background:' + p.badge + ';color:' + p.badgeText + '">#' + s.rank + ' Global</span></div>' +
+    '<div class="song-title">' + s.title + '</div>' +
+    '<div class="artist-name">' + s.artist + '<span class="genre-tag" style="background:' + p.badge + ';color:' + p.badgeText + '">' + s.genre + '</span></div>' +
+    '<div class="streams-note">' + s.streams + 'B streams &middot; Peak chart: #' + s.peak + ' &middot; ' + s.year + ' &middot; ' + s.country + '</div>' +
+    '<div class="divider"></div>' +
+    '<div class="stats-row">' +
+    '<div class="stat-box"><div class="stat-label">BPM</div><div class="stat-val">' + s.bpm + '</div></div>' +
+    '<div class="stat-box"><div class="stat-label">Duration</div><div class="stat-val" style="font-size:15px">' + s.duration + '</div></div>' +
+    '<div class="stat-box"><div class="stat-label">Streams</div><div class="stat-val">' + s.streams + '<span class="stat-unit">B</span></div></div>' +
+    '<div class="stat-box"><div class="stat-label">Energy</div><div class="stat-val">' + s.energy + '<span class="stat-unit">%</span></div></div>' +
+    '</div><div class="divider"></div>' +
+    '<div class="also-section"><div class="c-section-head">More from the artist' + (alsoEntries.length > 1 ? 's' : '') + '</div>' +
+    '<div class="artists-grid' + (isSingle ? ' single' : '') + '">' + pillsHtml + '</div></div>' +
+    '<div class="nav-row"><button class="nav-btn" onclick="prevCard()"' + (idx===0?' disabled':'') + '>&#8592; Prev</button>' +
+    '<div class="dots">' + dotsHtml + '</div>' +
+    '<button class="nav-btn" onclick="nextCard()"' + (idx===top5Songs.length-1?' disabled':'') + '>Next &#8594;</button></div></div>';
+}
+
+function goTo(i) { currentCard = i; renderCard(i); }
+function nextCard() { if (currentCard < top5Songs.length-1) { currentCard++; renderCard(currentCard); } }
+function prevCard() { if (currentCard > 0) { currentCard--; renderCard(currentCard); } }
+renderCard(0);
+
+/* ═══════════════════════════════════════════
+   PIE CHART
+═══════════════════════════════════════════ */
+(function() {
+  var genres = [
+    { label:"Pop", count:14, color:"#534AB7" },
+    { label:"Indie Pop", count:6, color:"#D85A30" },
+    { label:"Other", count:9, color:"#888780" },
+    { label:"Hip-Hop", count:5, color:"#1D9E75" },
+    { label:"Country", count:5, color:"#BA7517" },
+    { label:"R&B", count:4, color:"#0F6E56" },
+    { label:"Synth-Pop", count:4, color:"#D4537E" },
+    { label:"K-Pop", count:3, color:"#378ADD" }
+  ];
+  var total = genres.reduce(function(s,g) { return s+g.count; }, 0);
+  var cx=260, cy=210, r=148;
+  var svg = document.getElementById('pie-svg');
+  function toRad(d) { return d * Math.PI / 180; }
+  function slicePath(sd, ed) {
+    var s=toRad(sd), e=toRad(ed), large=(ed-sd)>180?1:0;
+    var x1=cx+r*Math.cos(s), y1=cy+r*Math.sin(s), x2=cx+r*Math.cos(e), y2=cy+r*Math.sin(e);
+    return "M"+cx+","+cy+" L"+x1.toFixed(3)+","+y1.toFixed(3)+" A"+r+","+r+" 0 "+large+",1 "+x2.toFixed(3)+","+y2.toFixed(3)+" Z";
+  }
+  var sd=-90, slices=genres.map(function(g) {
+    var sweep=(g.count/total)*360, ed=sd+sweep, mid=sd+sweep/2;
+    var obj={g:g,startDeg:sd,endDeg:ed,midDeg:mid,sweep:sweep}; sd=ed; return obj;
+  });
+  slices.forEach(function(s) {
+    var p=document.createElementNS("http://www.w3.org/2000/svg","path");
+    p.setAttribute("d",slicePath(s.startDeg,s.endDeg)); p.setAttribute("fill",s.g.color);
+    p.setAttribute("stroke","#fff"); p.setAttribute("stroke-width","2.5"); svg.appendChild(p);
+  });
+  var OUTSIDE=["Synth-Pop","K-Pop"];
+  function mkTs(parent,text,x,yOrDy,isDy,anchor,fill,size) {
+    var ts=document.createElementNS("http://www.w3.org/2000/svg","tspan");
+    ts.setAttribute("x",x.toFixed(2)); isDy?ts.setAttribute("dy",yOrDy):ts.setAttribute("y",yOrDy.toFixed(2));
+    ts.setAttribute("text-anchor",anchor); ts.setAttribute("fill",fill);
+    ts.setAttribute("font-size",size); ts.setAttribute("font-weight","400"); ts.textContent=text; parent.appendChild(ts);
+  }
+  function mkT() { var t=document.createElementNS("http://www.w3.org/2000/svg","text"); t.setAttribute("font-family","'DM Sans',sans-serif"); t.setAttribute("font-weight","400"); return t; }
+  slices.forEach(function(s) {
+    var pct=Math.round((s.g.count/total)*100)+"%", mr=toRad(s.midDeg);
+    if (OUTSIDE.indexOf(s.g.label)!==-1) {
+      var isR=Math.cos(mr)>=0;
+      var p1x=cx+(r+8)*Math.cos(mr), p1y=cy+(r+8)*Math.sin(mr);
+      var p2x=cx+(r+26)*Math.cos(mr), p2y=cy+(r+26)*Math.sin(mr);
+      var p3x=isR?p2x+22:p2x-22, tx=isR?p3x+4:p3x-4, anchor=isR?"start":"end";
+      var pl=document.createElementNS("http://www.w3.org/2000/svg","polyline");
+      pl.setAttribute("points",p1x.toFixed(2)+","+p1y.toFixed(2)+" "+p2x.toFixed(2)+","+p2y.toFixed(2)+" "+p3x.toFixed(2)+","+p2y.toFixed(2));
+      pl.setAttribute("fill","none"); pl.setAttribute("stroke",s.g.color); pl.setAttribute("stroke-width","1.5"); svg.appendChild(pl);
+      var t=mkT(); mkTs(t,s.g.label,tx,p2y-6,false,anchor,"#111","12"); mkTs(t,pct,tx,"15",true,anchor,"#999","11"); svg.appendChild(t);
+    } else {
+      var lr=r*0.59, lx=cx+lr*Math.cos(mr), ly=cy+lr*Math.sin(mr);
+      var t=mkT(); mkTs(t,s.g.label,lx,ly-7,false,"middle","#fff","12"); mkTs(t,pct,lx,"15",true,"middle","rgba(255,255,255,0.78)","11"); svg.appendChild(t);
+    }
+  });
+})();
+
+/* ═══════════════════════════════════════════
+   BAR CHART
+═══════════════════════════════════════════ */
+(function() {
+  var songData = [
+    {genre:"Pop",streams:1.7},{genre:"K-Pop",streams:1.62},{genre:"Pop",streams:1.55},{genre:"Pop",streams:1.48},{genre:"Pop",streams:1.41},
+    {genre:"Indie Pop",streams:1.38},{genre:"Hip-Hop",streams:1.35},{genre:"Pop",streams:1.29},{genre:"Other",streams:1.24},{genre:"Other",streams:1.20},
+    {genre:"Other",streams:1.18},{genre:"Indie Pop",streams:1.15},{genre:"K-Pop",streams:1.12},{genre:"Other",streams:1.09},{genre:"Country",streams:1.07},
+    {genre:"Country",streams:1.05},{genre:"Country",streams:1.03},{genre:"Pop",streams:0.98},{genre:"Synth-Pop",streams:0.96},{genre:"Indie Pop",streams:0.94},
+    {genre:"Country",streams:0.92},{genre:"Country",streams:0.90},{genre:"Other",streams:0.88},{genre:"Other",streams:0.87},{genre:"Hip-Hop",streams:0.85},
+    {genre:"Other",streams:0.84},{genre:"Indie Pop",streams:0.82},{genre:"Pop",streams:0.80},{genre:"Pop",streams:0.79},{genre:"Other",streams:0.78},
+    {genre:"Other",streams:0.77},{genre:"Synth-Pop",streams:0.76},{genre:"Hip-Hop",streams:0.74},{genre:"Indie Pop",streams:0.73},{genre:"Synth-Pop",streams:0.72},
+    {genre:"Synth-Pop",streams:0.71},{genre:"Other",streams:0.70},{genre:"Hip-Hop",streams:0.69},{genre:"R&B",streams:0.68},{genre:"Other",streams:0.67},
+    {genre:"Pop",streams:0.66},{genre:"Other",streams:0.64},{genre:"Indie Pop",streams:0.63},{genre:"Other",streams:0.62},{genre:"Other",streams:0.61},
+    {genre:"Pop",streams:0.60},{genre:"K-Pop",streams:0.59},{genre:"Indie Pop",streams:0.58},{genre:"Country",streams:0.57},{genre:"Other",streams:0.56}
+  ];
+  var colors = {"Pop":"#534AB7","Indie Pop":"#D85A30","Other":"#888780","Hip-Hop":"#1D9E75","Country":"#BA7517","R&B":"#0F6E56","Synth-Pop":"#D4537E","K-Pop":"#378ADD"};
+  var totals = {};
+  songData.forEach(function(s) { totals[s.genre]=Math.round(((totals[s.genre]||0)+s.streams)*100)/100; });
+  var named=["Pop","Indie Pop","Hip-Hop","Country","Synth-Pop","K-Pop","R&B"];
+  named.sort(function(a,b) { return totals[b]-totals[a]; });
+  var order=named.concat(["Other"]);
+  var max=0; order.forEach(function(g) { if(totals[g]>max) max=totals[g]; });
+  var container=document.getElementById('bars');
+  order.forEach(function(genre) {
+    var val=totals[genre], pct=(val/max)*100, display=val.toFixed(2)+"B", color=colors[genre], useInside=pct>20;
+    var row=document.createElement('div'); row.className='bar-row';
+    var label=document.createElement('div'); label.className='bar-label'; label.textContent=genre;
+    var track=document.createElement('div'); track.className='bar-track';
+    var fill=document.createElement('div'); fill.className='bar-fill'; fill.style.width=pct.toFixed(2)+'%'; fill.style.background=color;
+    if (useInside) {
+      var vi=document.createElement('span'); vi.className='bar-val-inside'; vi.textContent=display; fill.appendChild(vi); track.appendChild(fill);
+    } else {
+      track.appendChild(fill);
+      var vo=document.createElement('span'); vo.className='bar-val-outside'; vo.textContent=display; track.appendChild(vo);
+    }
+    row.appendChild(label); row.appendChild(track); container.appendChild(row);
+  });
+})();
+
+/* ═══════════════════════════════════════════
+   SONG FINGERPRINT
+═══════════════════════════════════════════ */
+var fpSongs = [
+  {rank:1,title:"Die With A Smile",artist:"Lady Gaga & Bruno Mars",streams:1.7,genre:"Pop",bpm:120,duration:"4:11",year:2024,country:"USA",peak:1,danceability:72,energy:68,valence:55,acousticness:18},
+  {rank:2,title:"APT.",artist:"ROSE & Bruno Mars",streams:1.62,genre:"K-Pop / Pop",bpm:145,duration:"2:53",year:2024,country:"South Korea",peak:1,danceability:86,energy:79,valence:88,acousticness:5},
+  {rank:3,title:"Espresso",artist:"Sabrina Carpenter",streams:1.55,genre:"Pop",bpm:104,duration:"2:55",year:2024,country:"USA",peak:1,danceability:80,energy:73,valence:96,acousticness:6},
+  {rank:4,title:"Please Please Please",artist:"Sabrina Carpenter",streams:1.48,genre:"Pop",bpm:107,duration:"3:06",year:2024,country:"USA",peak:1,danceability:70,energy:66,valence:87,acousticness:10},
+  {rank:5,title:"Taste",artist:"Sabrina Carpenter",streams:1.41,genre:"Pop",bpm:117,duration:"2:57",year:2024,country:"USA",peak:1,danceability:78,energy:70,valence:82,acousticness:8},
+  {rank:6,title:"Birds Of A Feather",artist:"Billie Eilish",streams:1.38,genre:"Indie Pop",bpm:88,duration:"3:30",year:2024,country:"USA",peak:1,danceability:75,energy:44,valence:65,acousticness:38},
+  {rank:7,title:"Not Like Us",artist:"Kendrick Lamar",streams:1.35,genre:"Hip-Hop",bpm:101,duration:"4:34",year:2024,country:"USA",peak:1,danceability:82,energy:72,valence:62,acousticness:4},
+  {rank:8,title:"Good Luck, Babe!",artist:"Chappell Roan",streams:1.29,genre:"Pop",bpm:131,duration:"3:39",year:2024,country:"USA",peak:1,danceability:66,energy:78,valence:56,acousticness:4},
+  {rank:9,title:"Beautiful Things",artist:"Benson Boone",streams:1.24,genre:"Pop Rock",bpm:97,duration:"3:31",year:2024,country:"USA",peak:1,danceability:46,energy:68,valence:46,acousticness:7},
+  {rank:10,title:"Lose Control",artist:"Teddy Swims",streams:1.20,genre:"R&B / Soul",bpm:90,duration:"3:22",year:2023,country:"USA",peak:1,danceability:60,energy:55,valence:64,acousticness:21},
+  {rank:11,title:"Too Sweet",artist:"Hozier",streams:1.18,genre:"Indie Folk",bpm:86,duration:"3:56",year:2024,country:"Ireland",peak:1,danceability:62,energy:48,valence:68,acousticness:42},
+  {rank:12,title:"Lunch",artist:"Billie Eilish",streams:1.15,genre:"Indie Pop",bpm:96,duration:"2:52",year:2024,country:"USA",peak:1,danceability:70,energy:52,valence:55,acousticness:14},
+  {rank:13,title:"Boom Boom Boom Boom",artist:"ROSE",streams:1.12,genre:"K-Pop / Pop",bpm:140,duration:"3:02",year:2024,country:"South Korea",peak:1,danceability:84,energy:82,valence:92,acousticness:3},
+  {rank:14,title:"Million Dollar Baby",artist:"Tommy Richman",streams:1.09,genre:"R&B / Pop",bpm:135,duration:"2:18",year:2024,country:"USA",peak:1,danceability:77,energy:76,valence:80,acousticness:6},
+  {rank:15,title:"Sticky",artist:"Shaboozey",streams:1.07,genre:"Country / Hip-Hop",bpm:93,duration:"3:11",year:2024,country:"USA",peak:1,danceability:72,energy:58,valence:74,acousticness:18},
+  {rank:16,title:"A Bar Song (Tipsy)",artist:"Shaboozey",streams:1.05,genre:"Country",bpm:96,duration:"3:44",year:2024,country:"USA",peak:1,danceability:70,energy:60,valence:78,acousticness:22},
+  {rank:17,title:"I Had Some Help",artist:"Post Malone ft. Morgan Wallen",streams:1.03,genre:"Country / Pop",bpm:110,duration:"3:12",year:2024,country:"USA",peak:1,danceability:74,energy:65,valence:80,acousticness:15},
+  {rank:18,title:"Flowers",artist:"Miley Cyrus",streams:0.98,genre:"Pop",bpm:118,duration:"3:20",year:2023,country:"USA",peak:1,danceability:74,energy:74,valence:88,acousticness:10},
+  {rank:19,title:"Cruel Summer",artist:"Taylor Swift",streams:0.96,genre:"Synth-Pop",bpm:170,duration:"2:58",year:2019,country:"USA",peak:1,danceability:55,energy:70,valence:57,acousticness:12},
+  {rank:20,title:"Fortnight",artist:"Taylor Swift ft. Post Malone",streams:0.94,genre:"Indie Pop",bpm:107,duration:"3:48",year:2024,country:"USA",peak:1,danceability:55,energy:54,valence:22,acousticness:18},
+  {rank:21,title:"Levii's Jeans",artist:"Beyonce ft. Post Malone",streams:0.92,genre:"Country / Pop",bpm:106,duration:"4:14",year:2024,country:"USA",peak:1,danceability:72,energy:65,valence:72,acousticness:14},
+  {rank:22,title:"Texas Hold 'Em",artist:"Beyonce",streams:0.90,genre:"Country",bpm:87,duration:"3:58",year:2024,country:"USA",peak:1,danceability:62,energy:60,valence:74,acousticness:35},
+  {rank:23,title:"Gata Only",artist:"FloyyMenor & Cris MJ",streams:0.88,genre:"Reggaeton",bpm:105,duration:"2:45",year:2023,country:"Chile",peak:1,danceability:86,energy:80,valence:76,acousticness:5},
+  {rank:24,title:"Tusa",artist:"KAROL G & Nicki Minaj",streams:0.87,genre:"Reggaeton",bpm:130,duration:"3:20",year:2019,country:"Colombia",peak:1,danceability:78,energy:78,valence:72,acousticness:8},
+  {rank:25,title:"Lovin On Me",artist:"Jack Harlow",streams:0.85,genre:"Hip-Hop / Pop",bpm:100,duration:"2:47",year:2023,country:"USA",peak:1,danceability:78,energy:62,valence:85,acousticness:7},
+  {rank:26,title:"Baile Inolvidable",artist:"KAROL G",streams:0.84,genre:"Latin Pop",bpm:100,duration:"3:22",year:2024,country:"Colombia",peak:1,danceability:80,energy:72,valence:82,acousticness:10},
+  {rank:27,title:"LTME Post",artist:"Gracie Abrams",streams:0.82,genre:"Indie Pop",bpm:92,duration:"3:14",year:2024,country:"USA",peak:1,danceability:60,energy:48,valence:44,acousticness:30},
+  {rank:28,title:"Bed Chem",artist:"Sabrina Carpenter",streams:0.80,genre:"Pop",bpm:104,duration:"2:40",year:2024,country:"USA",peak:2,danceability:72,energy:58,valence:78,acousticness:12},
+  {rank:29,title:"Exes",artist:"Tate McRae",streams:0.79,genre:"Pop",bpm:128,duration:"2:57",year:2024,country:"Canada",peak:1,danceability:80,energy:72,valence:72,acousticness:8},
+  {rank:30,title:"Jump",artist:"Tyla",streams:0.78,genre:"Afrobeats",bpm:110,duration:"3:11",year:2024,country:"South Africa",peak:2,danceability:86,energy:76,valence:84,acousticness:6},
+  {rank:31,title:"Water",artist:"Tyla",streams:0.77,genre:"Afrobeats",bpm:107,duration:"2:57",year:2023,country:"South Africa",peak:1,danceability:82,energy:70,valence:80,acousticness:8},
+  {rank:32,title:"I Can Do It With A Broken Heart",artist:"Taylor Swift",streams:0.76,genre:"Synth-Pop",bpm:164,duration:"3:33",year:2024,country:"USA",peak:1,danceability:64,energy:74,valence:68,acousticness:4},
+  {rank:33,title:"luther",artist:"Kendrick Lamar & SZA",streams:0.74,genre:"Hip-Hop / R&B",bpm:76,duration:"4:02",year:2024,country:"USA",peak:1,danceability:56,energy:42,valence:48,acousticness:32},
+  {rank:34,title:"WILDFLOWER",artist:"Billie Eilish",streams:0.73,genre:"Indie Pop",bpm:90,duration:"3:09",year:2024,country:"USA",peak:3,danceability:60,energy:42,valence:50,acousticness:42},
+  {rank:35,title:"Pink Pony Club",artist:"Chappell Roan",streams:0.72,genre:"Synth-Pop",bpm:130,duration:"4:11",year:2021,country:"USA",peak:4,danceability:72,energy:80,valence:62,acousticness:6},
+  {rank:36,title:"Femininomenon",artist:"Chappell Roan",streams:0.71,genre:"Synth-Pop",bpm:116,duration:"3:44",year:2023,country:"USA",peak:5,danceability:70,energy:78,valence:68,acousticness:4},
+  {rank:37,title:"End Of Beginning",artist:"Djo",streams:0.70,genre:"Indie Rock",bpm:139,duration:"3:16",year:2022,country:"USA",peak:3,danceability:52,energy:64,valence:44,acousticness:10},
+  {rank:38,title:"Like That",artist:"Kendrick Lamar",streams:0.69,genre:"Hip-Hop",bpm:100,duration:"4:45",year:2024,country:"USA",peak:2,danceability:70,energy:68,valence:42,acousticness:6},
+  {rank:39,title:"we can't be friends",artist:"Ariana Grande",streams:0.68,genre:"R&B / Pop",bpm:72,duration:"3:38",year:2024,country:"USA",peak:1,danceability:48,energy:40,valence:28,acousticness:50},
+  {rank:40,title:"Vampire",artist:"Olivia Rodrigo",streams:0.67,genre:"Pop Rock",bpm:91,duration:"3:38",year:2023,country:"USA",peak:1,danceability:52,energy:58,valence:44,acousticness:8},
+  {rank:41,title:"Stumblin' In",artist:"Cyril & Violet Skies",streams:0.66,genre:"Pop",bpm:90,duration:"3:04",year:2023,country:"Netherlands",peak:3,danceability:66,energy:54,valence:76,acousticness:22},
+  {rank:42,title:"Yellow",artist:"Coldplay",streams:0.64,genre:"Alternative",bpm:88,duration:"4:29",year:2000,country:"UK",peak:4,danceability:46,energy:54,valence:36,acousticness:14},
+  {rank:43,title:"Pretty Girl",artist:"Clairo",streams:0.63,genre:"Indie Pop",bpm:97,duration:"2:44",year:2017,country:"USA",peak:22,danceability:70,energy:52,valence:68,acousticness:28},
+  {rank:44,title:"Running Up That Hill",artist:"Kate Bush",streams:0.62,genre:"Art Pop",bpm:112,duration:"5:01",year:1985,country:"UK",peak:3,danceability:41,energy:68,valence:25,acousticness:8},
+  {rank:45,title:"good 4 u",artist:"Olivia Rodrigo",streams:0.61,genre:"Pop Punk",bpm:166,duration:"2:58",year:2021,country:"USA",peak:1,danceability:56,energy:90,valence:65,acousticness:0},
+  {rank:46,title:"Shake It Off",artist:"Taylor Swift",streams:0.60,genre:"Pop",bpm:160,duration:"3:39",year:2014,country:"USA",peak:1,danceability:65,energy:80,valence:94,acousticness:6},
+  {rank:47,title:"Espresso (Remix)",artist:"Sabrina Carpenter & Jimin",streams:0.59,genre:"Pop / K-Pop",bpm:104,duration:"2:58",year:2024,country:"USA / S.Korea",peak:2,danceability:82,energy:74,valence:92,acousticness:5},
+  {rank:48,title:"That's So True",artist:"Gracie Abrams",streams:0.58,genre:"Indie Pop",bpm:97,duration:"3:05",year:2024,country:"USA",peak:1,danceability:64,energy:55,valence:66,acousticness:22},
+  {rank:49,title:"Bodyguard",artist:"Beyonce",streams:0.57,genre:"Country",bpm:90,duration:"3:38",year:2024,country:"USA",peak:4,danceability:60,energy:56,valence:66,acousticness:38},
+  {rank:50,title:"Azizam",artist:"Ed Sheeran",streams:0.56,genre:"Pop / Folk",bpm:88,duration:"3:16",year:2023,country:"UK",peak:3,danceability:70,energy:52,valence:72,acousticness:32}
+];
+
+var fpAccent = ["#BA7517","#0F6E56","#185FA5","#993556","#534AB7","#D85A30","#1D9E75","#378ADD","#D4537E","#7F77DD"];
+var radarChart = null;
+
+function getAccent(rank) { return fpAccent[(rank-1) % fpAccent.length]; }
+function hexToRgba(hex,a) { var r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16); return 'rgba('+r+','+g+','+b+','+a+')'; }
+
+function displayFp(s) {
+  var accent = getAccent(s.rank);
+  document.getElementById('rank-pill').textContent = '#'+s.rank+' Global';
+  document.getElementById('rank-pill').style.background = hexToRgba(accent,0.15);
+  document.getElementById('rank-pill').style.color = accent;
+  document.getElementById('song-name').textContent = s.title;
+  document.getElementById('artist-line').textContent = s.artist;
+  document.getElementById('meta-line').innerHTML = s.genre+' &middot; '+s.year+' &middot; '+s.country+' &middot; '+s.streams+'B streams';
+  document.getElementById('stat-bpm').textContent = s.bpm;
+  document.getElementById('stat-dur').textContent = s.duration;
+  document.getElementById('stat-peak').textContent = '#'+s.peak;
+  document.getElementById('stat-streams').innerHTML = s.streams+'<span class="stat-tile-unit">B</span>';
+  var data = [s.danceability, s.energy, s.valence, 100-s.acousticness, Math.round((s.bpm/200)*100)];
+  if (radarChart) {
+    radarChart.data.datasets[0].data = data;
+    radarChart.data.datasets[0].backgroundColor = hexToRgba(accent,0.18);
+    radarChart.data.datasets[0].borderColor = accent;
+    radarChart.data.datasets[0].pointBackgroundColor = accent;
+    radarChart.update();
+  } else {
+    radarChart = new Chart(document.getElementById('radar'), {
+      type:'radar',
+      data:{ labels:['Danceability','Energy','Positivity','Loudness','Tempo'], datasets:[{ data:data, backgroundColor:hexToRgba(accent,0.18), borderColor:accent, borderWidth:2, pointBackgroundColor:accent, pointRadius:4, pointHoverRadius:6 }] },
+      options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label:function(ctx){return ctx.raw+'%';} } } }, scales:{ r:{ min:0, max:100, ticks:{stepSize:25,display:false}, grid:{color:'rgba(128,128,128,0.12)'}, angleLines:{color:'rgba(128,128,128,0.12)'}, pointLabels:{font:{size:12,family:"'DM Sans',sans-serif"},color:'#999'} } } }
+    });
+  }
+}
+
+function pickRandom() { displayFp(fpSongs[Math.floor(Math.random()*fpSongs.length)]); }
+displayFp(fpSongs[0]);
+
+/* ═══════════════════════════════════════════
+   HIT BUILDER
+═══════════════════════════════════════════ */
+var BUILDER_GENRES = [
+  {name:"Pop",score:1.00},{name:"K-Pop/Pop",score:0.96},{name:"R&B/Soul",score:0.88},
+  {name:"Indie Folk",score:0.86},{name:"Indie Pop",score:0.80},{name:"Hip-Hop",score:0.78},
+  {name:"Country/Pop",score:0.74},{name:"Pop Rock",score:0.72},{name:"R&B/Pop",score:0.70},
+  {name:"Reggaeton",score:0.68},{name:"Country",score:0.66},{name:"Synth-Pop",score:0.64},
+  {name:"Afrobeats",score:0.60},{name:"Latin Pop",score:0.54},{name:"Hip-Hop/Pop",score:0.50},
+  {name:"Alternative",score:0.38},{name:"Pop Punk",score:0.34},{name:"Indie Rock",score:0.30},{name:"Pop/Folk",score:0.24}
+];
+
+var BWEIGHTS = {genre:0.30,dance:0.22,valence:0.18,energy:0.12,bpm:0.10,acoustic:0.05,explicit:0.03};
+var selectedGenre="Pop", isExplicit=false;
+
+var genreGrid=document.getElementById('genreGrid');
+BUILDER_GENRES.forEach(function(g) {
+  var btn=document.createElement('button'); btn.className='genre-btn'+(g.name==='Pop'?' active':''); btn.textContent=g.name;
+  btn.onclick=function() { document.querySelectorAll('.genre-btn').forEach(function(b){b.classList.remove('active');}); btn.classList.add('active'); selectedGenre=g.name; recalc(); };
+  genreGrid.appendChild(btn);
+});
+
+function setExplicit(val) { isExplicit=val; document.getElementById('exp-no').classList.toggle('active',!val); document.getElementById('exp-yes').classList.toggle('active',val); recalc(); }
+
+function updateSlider(key) {
+  var el=document.getElementById('sl-'+key), out=document.getElementById('out-'+key);
+  out.textContent = key==='bpm' ? el.value : (el.value/100).toFixed(2);
+  recalc();
+}
+
+function scoreFeat(val,ideal,width) { return Math.max(0,1-Math.abs(val-ideal)/width); }
+
+function recalc() {
+  var dance=document.getElementById('sl-dance').value/100;
+  var energy=document.getElementById('sl-energy').value/100;
+  var valence=document.getElementById('sl-valence').value/100;
+  var acoustic=document.getElementById('sl-acoustic').value/100;
+  var bpm=parseInt(document.getElementById('sl-bpm').value);
+  var gd=BUILDER_GENRES.find(function(g){return g.name===selectedGenre;})||BUILDER_GENRES[0];
+  var factors={
+    "Genre fit":     gd.score                          * BWEIGHTS.genre,
+    "Danceability":  scoreFeat(dance,0.70,0.35)        * BWEIGHTS.dance,
+    "Mood (valence)":scoreFeat(valence,0.68,0.40)      * BWEIGHTS.valence,
+    "Energy":        scoreFeat(energy,0.65,0.40)       * BWEIGHTS.energy,
+    "Tempo":         scoreFeat(bpm,110,50)             * BWEIGHTS.bpm,
+    "Low acousticness":Math.max(0,1-acoustic/0.5)     * BWEIGHTS.acoustic,
+    "Explicitness":  (isExplicit?0.75:1.0)            * BWEIGHTS.explicit
+  };
+  var maxScores={"Genre fit":BWEIGHTS.genre,"Danceability":BWEIGHTS.dance,"Mood (valence)":BWEIGHTS.valence,"Energy":BWEIGHTS.energy,"Tempo":BWEIGHTS.bpm,"Low acousticness":BWEIGHTS.acoustic,"Explicitness":BWEIGHTS.explicit};
+  var total=Object.values(factors).reduce(function(s,v){return s+v;},0);
+  var pct=Math.min(99,Math.round(total*100));
+  var label,verdict;
+  if(pct>=85){label="top charter";verdict="Your song has all the hallmarks of a Spotify Wrapped hit.";}
+  else if(pct>=70){label="likely hit";verdict="Strong chart potential — a few tweaks could push it higher.";}
+  else if(pct>=50){label="mid-charter";verdict="Decent shot at charting, but something is holding it back.";}
+  else if(pct>=35){label="niche appeal";verdict="Niche appeal — may find a dedicated audience but unlikely to dominate.";}
+  else{label="deep cut";verdict="This combination rarely makes the top 50. Try adjusting your features.";}
+  var tips=[];
+  if(dance<0.60) tips.push("Boost danceability above 0.60 — it has the strongest correlation with streams (+0.34).");
+  if(valence<0.55) tips.push("Raise the mood (valence) — top 50 songs average 0.67, leaning upbeat.");
+  if(acoustic>0.25) tips.push("Reduce acousticness — hits are heavily produced (avg 0.15).");
+  if(bpm<88||bpm>135) tips.push("Bring tempo closer to 90–130 BPM — the sweet spot for top charting songs.");
+  if(gd.score<0.65) tips.push(selectedGenre+" is underrepresented in the top 50. Blending in Pop elements could help.");
+  if(isExplicit) tips.push("86% of top 50 songs are clean — explicit content slightly lowers broad appeal.");
+  if(!tips.length) tips.push("Looking good! Your song matches the profile of a Spotify Wrapped hit.");
+  var color=pct>=75?"#1D9E75":pct>=50?"#BA7517":"#E24B4A";
+  var ring=document.getElementById('ringFill');
+  ring.setAttribute('stroke-dashoffset',(414.7*(1-pct/100)).toFixed(1));
+  ring.setAttribute('stroke',color);
+  var rp=document.getElementById('ringPct'); rp.textContent=pct+'%'; rp.setAttribute('fill',color);
+  document.getElementById('ringLabel').textContent=label;
+  document.getElementById('verdict').textContent=verdict;
+  var bd=document.getElementById('factorBreakdown'); bd.innerHTML='';
+  Object.keys(factors).forEach(function(name) {
+    var earned=factors[name], max=maxScores[name], bp=Math.round((earned/Math.max(max,0.001))*100);
+    var row=document.createElement('div'); row.className='factor-row';
+    row.innerHTML='<span class="factor-name">'+name+'</span><div class="factor-bar-track"><div class="factor-bar-fill" style="width:'+bp+'%;background:'+color+'"></div></div><span class="factor-score" style="color:'+color+'">'+Math.round(earned*100)+'/'+Math.round(max*100)+'</span>';
+    bd.appendChild(row);
+  });
+  var tl=document.getElementById('tipsList'); tl.innerHTML='';
+  tips.forEach(function(t) { var li=document.createElement('li'); li.className='tip-item'; li.innerHTML='<span class="tip-dot"></span><span>'+t+'</span>'; tl.appendChild(li); });
+}
+recalc();
+</script>
+</body>
+</html>
